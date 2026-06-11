@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         val btnRegistrar = findViewById<Button>(R.id.btnRegistrar)
 
         // 2. Instanciar la base de datos de Room
-        // Nota: Asegúrate de usar el mismo nombre de base de datos que usas en el resto de tu app ("examen_db" es un ejemplo)
         val db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, "examen_db"
@@ -72,10 +71,32 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 4. Lógica para ir a la pantalla de Registro
+        // 4. Lógica para ir a la pantalla de Registro con validación previa
         btnRegistrar.setOnClickListener {
-            val intent = Intent(this, SignUpActivity::class.java)
-            startActivity(intent)
+            val nombre = etUsuario.text.toString().trim()
+
+            // Si el campo está vacío, simplemente lo mandamos a registrarse
+            if (nombre.isEmpty()) {
+                val intent = Intent(this@MainActivity, SignUpActivity::class.java)
+                startActivity(intent)
+                return@setOnClickListener
+            }
+
+            // Si escribió un nombre, verificamos en la BD usando una corrutina
+            lifecycleScope.launch(Dispatchers.IO) {
+                val jugadorExistente = db.jugadorDao().buscarJugadorPorNombre(nombre)
+
+                withContext(Dispatchers.Main) {
+                    if (jugadorExistente != null) {
+                        // El jugador ya existe en la base de datos
+                        Toast.makeText(this@MainActivity, "Ese usuario ya está registrado", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // No existe, procedemos a abrir la pantalla de registro
+                        val intent = Intent(this@MainActivity, SignUpActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+            }
         }
     }
 }

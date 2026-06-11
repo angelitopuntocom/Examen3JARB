@@ -14,4 +14,7 @@ interface JugadorDao {
     // Nueva función para buscar un jugador por sus credenciales
     @Query("SELECT * FROM tabla_jugadores WHERE nombre = :nombre AND contrasena = :contrasena LIMIT 1")
     suspend fun verificarCredenciales(nombre: String, contrasena: String): Jugador?
+
+    @Query("SELECT * FROM tabla_jugadores WHERE nombre = :nombre LIMIT 1")
+    suspend fun buscarJugadorPorNombre(nombre: String): Jugador?
 }
