@@ -3,4 +3,7 @@
     <string name="hint_registro_usuario">Nombre de usuario</string>
     <string name="hint_registro_contrasena">Contraseña</string>
     <string name="btn_registrarse">Registrarse</string>
+    <string name="tv_perfil_titulo">Mi Perfil</string>
+    <string name="tv_nombre_usuario_ejemplo">Nombre del Jugador</string>
+    <string name="btn_cerrar_sesion">Cerrar sesión</string>
 </resources>
